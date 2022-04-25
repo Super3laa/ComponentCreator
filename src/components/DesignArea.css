@@ -1,0 +1,10 @@
+.DesignArea{
+    display: flex;
+    min-height: 100vh;
+}
+
+.ComponentLayout{
+    resize: both;
+    overflow: auto;
+    margin: auto;
+}
