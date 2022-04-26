@@ -11,6 +11,10 @@ var _material = require("@mui/material");
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _TreeItem = _interopRequireDefault(require("@mui/lab/TreeItem"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -27,6 +31,7 @@ function Node(_ref) {
   this._children = [];
   this._direction = '';
   this._JSXComponent = null;
+  this._TreeView = null;
   this._name = name;
   this._GridType = 'item';
   this._content = content;
@@ -50,6 +55,27 @@ Node.prototype.render = function () {
   var node = deptFirstPreOrder(this, renderElement);
   return node._JSXComponent;
 };
+
+Node.prototype.makeTree = function () {
+  var node = deptFirstPreOrder(this, TreeItemComponent);
+  return node._TreeView;
+};
+
+function TreeItemComponent(currentNode) {
+  if (currentNode._GridType === 'item') {
+    currentNode._TreeView = _react["default"].createElement(_TreeItem["default"], {
+      nodeId: currentNode._name,
+      label: currentNode._name
+    });
+  } else {
+    currentNode._TreeView = _react["default"].createElement(_TreeItem["default"], {
+      nodeId: currentNode._name,
+      label: currentNode._name
+    }, currentNode._children.map(function (child) {
+      return child._TreeView;
+    }));
+  }
+}
 
 Node.prototype.updateNode = function (nodeName, Obj) {
   var foundNode = depthFirstSearch(this, nodeName);
@@ -77,10 +103,7 @@ var deptFirstPreOrder = function deptFirstPreOrder(currentNode, callback) {
   });
 
   callback(currentNode);
-
-  if (currentNode._name === 'MotherNode') {
-    return currentNode;
-  }
+  return currentNode;
 };
 
 function renderElement(currentNode) {

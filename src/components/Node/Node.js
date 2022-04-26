@@ -1,10 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Button, Grid ,} from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import TreeItem from '@mui/lab/TreeItem';
 
 export default function Node ({name,content}) {
     this._children = [];
     this._direction = '';
     this._JSXComponent = null;
+    this._TreeView = null;
     this._name= name;
     this._GridType = 'item';
     this._content = content;
@@ -29,6 +31,19 @@ Node.prototype.render = function(){
     return(node._JSXComponent)
 }
 
+Node.prototype.makeTree = function(){
+    let node =  deptFirstPreOrder(this,TreeItemComponent);
+    return(node._TreeView)
+}
+
+function TreeItemComponent (currentNode){
+    if (currentNode._GridType === 'item') {
+        currentNode._TreeView = React.createElement(TreeItem, { nodeId: currentNode._name,label:currentNode._name });
+    } else {
+        currentNode._TreeView = React.createElement(TreeItem,  { nodeId: currentNode._name,label:currentNode._name },
+           currentNode._children.map(child=>child._TreeView));
+    }
+}
 Node.prototype.updateNode = function(nodeName,Obj){
     let foundNode = depthFirstSearch(this,nodeName)
     foundNode._style = Obj;
@@ -52,9 +67,7 @@ const deptFirstPreOrder = (currentNode,callback) => {
         deptFirstPreOrder(node,callback);
     })
     callback(currentNode);    
-    if (currentNode._name === 'MotherNode') {
-        return currentNode
-    }
+    return currentNode
 }
 function renderElement(currentNode){
     if (currentNode._GridType === 'item') {
