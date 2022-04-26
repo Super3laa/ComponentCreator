@@ -18,6 +18,8 @@ export default function DesignArea() {
     MotherNode.addNode(child1)
     MotherNode.addNode(child2);
 
+    MotherNode.updateNode('child2',{direction:'column'})
+    
     return (
         <div className="DesignArea">
             <div className="ComponentLayout">

@@ -9,6 +9,7 @@ export default function Node ({name,content}) {
     this._GridType = 'item';
     this._content = content;
     this._childrenCount = 0;
+    this._style={};
 }
 
 
@@ -24,21 +25,38 @@ Node.prototype.addNode = function(node){
 }
 
 Node.prototype.render = function(){
-    return deptFirstPreOrder(this)
+    let node = deptFirstPreOrder(this,renderElement)
+    return(node._JSXComponent)
 }
 
-const deptFirstPreOrder = (currentNode) => {
-    currentNode._children.forEach(node => {
-        deptFirstPreOrder(node);
+Node.prototype.updateNode = function(nodeName,Obj){
+    deptFirstSearch(this,nodeName,Obj);
+}
+
+const deptFirstSearch = (currentNode,name,Obj)=>{
+    if (currentNode._name === name ){
+        currentNode._style = Obj;
+    }
+    currentNode._children.forEach(node=>{
+        deptFirstSearch(node,name,Obj);
     })
+}
+
+const deptFirstPreOrder = (currentNode,callback) => {
+    currentNode._children.forEach(node => {
+        deptFirstPreOrder(node,callback);
+    })
+    callback(currentNode);    
+    if (currentNode._name === 'MotherNode') {
+        return currentNode
+    }
+}
+function renderElement(currentNode){
     if (currentNode._GridType === 'item') {
         currentNode._JSXComponent = React.createElement(Grid, { item: true },
-            React.createElement('p', {className:currentNode._name}, currentNode._content));
+            React.createElement('p', {className:currentNode._name,...currentNode._style}, currentNode._content));
     } else {
         currentNode._JSXComponent = React.createElement(Grid, { item: true },
-            React.createElement(Grid, { container: true ,className:currentNode._name},currentNode._children.map(child=>child._JSXComponent)));
-    }
-    if (currentNode._name === 'MotherNode') {
-        return currentNode._JSXComponent
+            React.createElement(Grid, { container: true ,className:currentNode._name,...currentNode._style},currentNode._children.map(child=>child._JSXComponent)));
     }
 }
