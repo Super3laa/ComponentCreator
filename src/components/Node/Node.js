@@ -30,16 +30,21 @@ Node.prototype.render = function(){
 }
 
 Node.prototype.updateNode = function(nodeName,Obj){
-    deptFirstSearch(this,nodeName,Obj);
+    let foundNode = depthFirstSearch(this,nodeName)
+    foundNode._style = Obj;
 }
 
-const deptFirstSearch = (currentNode,name,Obj)=>{
-    if (currentNode._name === name ){
-        currentNode._style = Obj;
-    }
-    currentNode._children.forEach(node=>{
-        deptFirstSearch(node,name,Obj);
+
+function  depthFirstSearch (currentNode,name){
+    let retVal;
+    currentNode._children.some(node =>{
+        retVal =  depthFirstSearch(node,name)
+        return retVal
     })
+    if (currentNode._name === name ){
+        return currentNode
+    }
+    return retVal;    
 }
 
 const deptFirstPreOrder = (currentNode,callback) => {

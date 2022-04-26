@@ -1,16 +1,30 @@
 import { Grid } from '@mui/material';
 import React from 'react';
 import DesignArea from './DesignArea';
+import Node from './Node/Node';
 import Tools from './Tools';
 
 export default function Layout(){
+    let MotherNode = new Node({ name: 'MotherNode' });
+    let child1 = new Node({ name: "child1" })
+    let child2 = new Node({ name: "child2" })
+    let paragraph1 = new Node({ name: "paragraph1", content: "one" })
+    let paragraph2 = new Node({ name: "paragraph2", content: "two" })
+    let paragraph3 = new Node({ name: "paragraph3", content: "three" })
+    child1.addNode(paragraph1)
+    child2.addNode(paragraph2)
+    child2.addNode(paragraph3)
+    MotherNode.addNode(child1)
+    MotherNode.addNode(child2);
+    MotherNode.updateNode('child2',{direction:'column'})
+    MotherNode.updateNode('MotherNode',{spacing:3,justifyContent:'space-around'})
     return (
         <Grid container>
             <Grid item xs={9}>
-                <DesignArea />
+                <DesignArea MotherNode={MotherNode}/>
             </Grid>
             <Grid item xs={3}>
-                <Tools />
+                <Tools MotherNode={MotherNode}/>
             </Grid>
         </Grid>
     )
