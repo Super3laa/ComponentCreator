@@ -56,21 +56,27 @@ Node.prototype.render = function () {
   return node._JSXComponent;
 };
 
-Node.prototype.makeTree = function () {
-  var node = deptFirstPreOrder(this, TreeItemComponent);
+Node.prototype.makeTree = function (onItemClick) {
+  var node = deptFirstPreOrder(this, TreeItemComponent, onItemClick);
   return node._TreeView;
 };
 
-function TreeItemComponent(currentNode) {
+function TreeItemComponent(currentNode, onItemClick) {
   if (currentNode._GridType === 'item') {
     currentNode._TreeView = _react["default"].createElement(_TreeItem["default"], {
       nodeId: currentNode._name,
-      label: currentNode._name
+      label: currentNode._name,
+      onClick: function onClick() {
+        onItemClick(currentNode);
+      }
     });
   } else {
     currentNode._TreeView = _react["default"].createElement(_TreeItem["default"], {
       nodeId: currentNode._name,
-      label: currentNode._name
+      label: currentNode._name,
+      onClick: function onClick() {
+        onItemClick(currentNode);
+      }
     }, currentNode._children.map(function (child) {
       return child._TreeView;
     }));
@@ -97,12 +103,12 @@ function depthFirstSearch(currentNode, name) {
   return retVal;
 }
 
-var deptFirstPreOrder = function deptFirstPreOrder(currentNode, callback) {
+var deptFirstPreOrder = function deptFirstPreOrder(currentNode, callback, cb) {
   currentNode._children.forEach(function (node) {
-    deptFirstPreOrder(node, callback);
+    deptFirstPreOrder(node, callback, cb);
   });
 
-  callback(currentNode);
+  callback(currentNode, cb);
   return currentNode;
 };
 

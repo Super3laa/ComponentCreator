@@ -31,16 +31,24 @@ Node.prototype.render = function(){
     return(node._JSXComponent)
 }
 
-Node.prototype.makeTree = function(){
-    let node =  deptFirstPreOrder(this,TreeItemComponent);
+Node.prototype.makeTree = function(onItemClick){
+    let node =  deptFirstPreOrder(this,TreeItemComponent,onItemClick);
     return(node._TreeView)
 }
 
-function TreeItemComponent (currentNode){
+function TreeItemComponent (currentNode,onItemClick){
     if (currentNode._GridType === 'item') {
-        currentNode._TreeView = React.createElement(TreeItem, { nodeId: currentNode._name,label:currentNode._name });
+        currentNode._TreeView = React.createElement(TreeItem,
+             { nodeId: currentNode._name,
+                label:currentNode._name,
+                onClick:()=>{onItemClick(currentNode)}
+             });
     } else {
-        currentNode._TreeView = React.createElement(TreeItem,  { nodeId: currentNode._name,label:currentNode._name },
+        currentNode._TreeView = React.createElement(TreeItem,
+              { nodeId: currentNode._name,
+                label:currentNode._name,
+                onClick:()=>{onItemClick(currentNode)}
+                 },
            currentNode._children.map(child=>child._TreeView));
     }
 }
@@ -62,11 +70,11 @@ function  depthFirstSearch (currentNode,name){
     return retVal;    
 }
 
-const deptFirstPreOrder = (currentNode,callback) => {
+const deptFirstPreOrder = (currentNode,callback,cb) => {
     currentNode._children.forEach(node => {
-        deptFirstPreOrder(node,callback);
+        deptFirstPreOrder(node,callback,cb);
     })
-    callback(currentNode);    
+    callback(currentNode,cb);    
     return currentNode
 }
 function renderElement(currentNode){

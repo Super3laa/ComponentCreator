@@ -1,11 +1,14 @@
 import { Grid } from '@mui/material';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { updateMotherNode } from '../redux/actions/Tree';
 import DesignArea from './DesignArea';
 import Node from './Node/Node';
 import Tools from './Tools';
 
 export default function Layout(){
-    let MotherNode = new Node({ name: 'MotherNode' });
+    const dispatch = useDispatch();
+    let MotherNode = new Node({ name: 'MotherNode' })
     let child1 = new Node({ name: "child1" })
     let child2 = new Node({ name: "child2" })
     let paragraph1 = new Node({ name: "paragraph1", content: "one" })
@@ -18,6 +21,7 @@ export default function Layout(){
     MotherNode.addNode(child2);
     MotherNode.updateNode('child2',{direction:'column'})
     MotherNode.updateNode('MotherNode',{spacing:3,justifyContent:'space-around'})
+    dispatch(updateMotherNode(MotherNode))
     return (
         <Grid container>
             <Grid item xs={9}>
