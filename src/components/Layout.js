@@ -20,7 +20,7 @@ export default function Layout(){
     MotherNode.addNode(child1)
     MotherNode.addNode(child2);
     MotherNode.updateNode('child2',{direction:'column'})
-    MotherNode.updateNode('MotherNode',{spacing:3,justifyContent:'space-around'})
+    MotherNode.updateNode('MotherNode',{justifyContent:'space-around'})
     dispatch(updateMotherNode(MotherNode))
     return (
         <Grid container>

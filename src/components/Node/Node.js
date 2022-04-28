@@ -9,6 +9,7 @@ export default function Node ({name,content}) {
     this._TreeView = null;
     this._name= name;
     this._GridType = 'item';
+    this._GridStyle = {}
     this._content = content;
     this._childrenCount = 0;
     this._style={};
@@ -54,7 +55,7 @@ function TreeItemComponent (currentNode,onItemClick){
 }
 Node.prototype.updateNode = function(nodeName,Obj){
     let foundNode = depthFirstSearch(this,nodeName)
-    foundNode._style = Obj;
+    foundNode._GridStyle = Obj;
 }
 
 
@@ -80,9 +81,9 @@ const deptFirstPreOrder = (currentNode,callback,cb) => {
 function renderElement(currentNode){
     if (currentNode._GridType === 'item') {
         currentNode._JSXComponent = React.createElement(Grid, { item: true },
-            React.createElement('p', {className:currentNode._name,...currentNode._style}, currentNode._content));
+            React.createElement('p', {className:currentNode._name,...currentNode._GridStyle,style:currentNode._style}, currentNode._content));
     } else {
         currentNode._JSXComponent = React.createElement(Grid, { item: true },
-            React.createElement(Grid, { container: true ,className:currentNode._name,...currentNode._style},currentNode._children.map(child=>child._JSXComponent)));
+            React.createElement(Grid, { container: true ,className:currentNode._name,...currentNode._GridStyle,style:currentNode._style},currentNode._children.map(child=>child._JSXComponent)));
     }
 }

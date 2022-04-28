@@ -34,6 +34,7 @@ function Node(_ref) {
   this._TreeView = null;
   this._name = name;
   this._GridType = 'item';
+  this._GridStyle = {};
   this._content = content;
   this._childrenCount = 0;
   this._style = {};
@@ -85,7 +86,7 @@ function TreeItemComponent(currentNode, onItemClick) {
 
 Node.prototype.updateNode = function (nodeName, Obj) {
   var foundNode = depthFirstSearch(this, nodeName);
-  foundNode._style = Obj;
+  foundNode._GridStyle = Obj;
 };
 
 function depthFirstSearch(currentNode, name) {
@@ -118,14 +119,18 @@ function renderElement(currentNode) {
       item: true
     }, _react["default"].createElement('p', _objectSpread({
       className: currentNode._name
-    }, currentNode._style), currentNode._content));
+    }, currentNode._GridStyle, {
+      style: currentNode._style
+    }), currentNode._content));
   } else {
     currentNode._JSXComponent = _react["default"].createElement(_material.Grid, {
       item: true
     }, _react["default"].createElement(_material.Grid, _objectSpread({
       container: true,
       className: currentNode._name
-    }, currentNode._style), currentNode._children.map(function (child) {
+    }, currentNode._GridStyle, {
+      style: currentNode._style
+    }), currentNode._children.map(function (child) {
       return child._JSXComponent;
     })));
   }
