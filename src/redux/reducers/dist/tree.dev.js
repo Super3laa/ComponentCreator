@@ -31,7 +31,6 @@ var tree = function tree() {
       });
 
     case 'refreshTree':
-      console.log(state.MotherNode);
       return {
         MotherNode: state.MotherNode,
         ref: !state.ref
