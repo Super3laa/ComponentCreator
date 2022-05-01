@@ -93,7 +93,7 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                     <Controller
                         render={({ field }) => {
                             return <TextField
-                                value={GridItem.xs}
+                                value={GridItem.xs?GridItem.xs:''}
                                 inputProps={{ inputMode: 'numeric', pattern: '[1-12]*' }}
                                 onChange={event => { field.onChange(event.target.value) }}
                                 id="outlined-basic" label="Outlined" variant="outlined" />
@@ -107,7 +107,7 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                     <Controller
                         render={({ field }) => {
                             return <TextField
-                                value={GridItem.md}
+                                value={GridItem.md?GridItem.md:''}
                                 inputProps={{ inputMode: 'numeric', pattern: '[1-12]*' }}
                                 onChange={event => { field.onChange(event.target.value) }}
                                 id="outlined-basic" label="Outlined" variant="outlined" />

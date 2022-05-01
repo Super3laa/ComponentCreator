@@ -111,7 +111,7 @@ function getCode(currentNode){
         })
         let GridItem = JSXMaker({
             tagName:`Grid`,
-            tagProps:`item `,
+            tagProps:`item ${ObjtoString(currentNode._gridItem)}`,
             tagChild:`${GridContainer}`
         })
         currentNode._JSX = GridItem;
@@ -122,7 +122,9 @@ function getCode(currentNode){
 function ObjtoString (obj){
     let str = ''
         Object.keys(obj).forEach(function(key) {
-            str += `${key}={${obj[key]}} `
+            if(obj[key]!==''){
+                str += `${key}={${obj[key]}} `
+            }
         });
     return str;
 }

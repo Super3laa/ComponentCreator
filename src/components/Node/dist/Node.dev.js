@@ -170,7 +170,7 @@ function getCode(currentNode) {
 
     var _GridItem = JSXMaker({
       tagName: "Grid",
-      tagProps: "item ",
+      tagProps: "item ".concat(ObjtoString(currentNode._gridItem)),
       tagChild: "".concat(GridContainer)
     });
 
@@ -181,7 +181,9 @@ function getCode(currentNode) {
 function ObjtoString(obj) {
   var str = '';
   Object.keys(obj).forEach(function (key) {
-    str += "".concat(key, "={").concat(obj[key], "} ");
+    if (obj[key] !== '') {
+      str += "".concat(key, "={").concat(obj[key], "} ");
+    }
   });
   return str;
 }
