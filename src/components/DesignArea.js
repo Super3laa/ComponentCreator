@@ -4,18 +4,20 @@ import './DesignArea.css'
 import CodeIcon from '@mui/icons-material/Code';
 import Node from './Node/Node';
 import { useSelector } from 'react-redux';
-
+import prettier from "prettier/standalone";
+import babylon from "prettier/parser-babel";
 export default function DesignArea(props) {
-    let Tree = useSelector(state=>state.Tree);
+    let Tree = useSelector(state => state.Tree);
     let MotherNode = Tree.MotherNode;
     const [component, setComponent] = useState(null)
+    console.log(MotherNode.code())
     return (
         <div className="DesignArea">
             <div className="ComponentLayout">
-                <Grid container direction="column" spacing={5}>
+                <Grid container direction="column">
                     <div className="component">
                         {MotherNode.render()}
-                        </div>
+                    </div>
                     <Grid item>
                         <Button variant="outlined" startIcon={<CodeIcon />}>
                             Code
@@ -24,9 +26,7 @@ export default function DesignArea(props) {
                     <Grid item>
                         <pre>
                             <code>
-                                {
-
-                                }
+                                {prettier.format(MotherNode._JSX, {parser: "babel",plugins: [babylon]})}
                             </code>
                         </pre>
                     </Grid>

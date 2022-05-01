@@ -54,6 +54,7 @@ export default function Tools() {
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
             currentNode._GridStyle = { ...currentNode._GridStyle, ...obj };
         }
+        Object.keys(GridItem).forEach(key => GridItem[key] === undefined && delete GridItem[key])
         currentNode._gridItem = GridItem;
         setCurrentNode(currentNode);
         dispatch(refreshTree())

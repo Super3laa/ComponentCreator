@@ -31,6 +31,8 @@ function Node(_ref) {
   this._children = [];
   this._direction = '';
   this._JSXComponent = null;
+  this._JSX = null;
+  this._css = null;
   this._TreeView = null;
   this._name = name;
   this._GridType = 'item';
@@ -56,6 +58,10 @@ Node.prototype.addNode = function (node) {
 Node.prototype.render = function () {
   var node = deptFirstPreOrder(this, renderElement);
   return node._JSXComponent;
+};
+
+Node.prototype.code = function () {
+  var node = deptFirstPreOrder(this, getCode);
 };
 
 Node.prototype.makeTree = function (onItemClick) {
@@ -118,11 +124,10 @@ function renderElement(currentNode) {
   if (currentNode._GridType === 'item') {
     currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
       item: true
-    }, currentNode._gridItem), _react["default"].createElement('p', _objectSpread({
-      className: currentNode._name
-    }, currentNode._GridStyle, {
+    }, currentNode._gridItem), _react["default"].createElement('p', {
+      className: currentNode._name,
       style: currentNode._style
-    }), currentNode._content));
+    }, currentNode._content));
   } else {
     currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
       item: true
@@ -135,4 +140,55 @@ function renderElement(currentNode) {
       return child._JSXComponent;
     })));
   }
+}
+
+function getCode(currentNode) {
+  if (currentNode._GridType === 'item') {
+    var tagChild = JSXMaker({
+      tagName: "p",
+      tagProps: "className=\"".concat(currentNode._name, "\""),
+      tagChild: "".concat(currentNode._content)
+    });
+    var GridItem = JSXMaker({
+      tagName: 'Grid',
+      tagProps: "item ".concat(ObjtoString(currentNode._gridItem)),
+      tagChild: tagChild
+    });
+    currentNode._JSX = GridItem;
+  } else {
+    var children = '';
+
+    currentNode._children.map(function (child) {
+      return children += child._JSX;
+    });
+
+    var GridContainer = JSXMaker({
+      tagName: 'Grid',
+      tagProps: "className=\"".concat(currentNode._name, "\" grid "),
+      tagChild: children
+    });
+
+    var _GridItem = JSXMaker({
+      tagName: "Grid",
+      tagProps: "item ",
+      tagChild: "".concat(GridContainer)
+    });
+
+    currentNode._JSX = _GridItem; //
+  }
+}
+
+function ObjtoString(obj) {
+  var str = '';
+  Object.keys(obj).forEach(function (key) {
+    str += "".concat(key, "={").concat(obj[key], "} ");
+  });
+  return str;
+}
+
+function JSXMaker(_ref2) {
+  var tagName = _ref2.tagName,
+      tagProps = _ref2.tagProps,
+      tagChild = _ref2.tagChild;
+  return "<".concat(tagName, " ").concat(tagProps, ">\n                        ").concat(tagChild, "\n                    </").concat(tagName, ">\n                    ");
 }
