@@ -9,7 +9,8 @@ export default function Node ({name,content}) {
     this._TreeView = null;
     this._name= name;
     this._GridType = 'item';
-    this._GridStyle = {}
+    this._GridStyle = {};
+    this._gridItem={};
     this._content = content;
     this._childrenCount = 0;
     this._style={};
@@ -80,10 +81,10 @@ const deptFirstPreOrder = (currentNode,callback,cb) => {
 }
 function renderElement(currentNode){
     if (currentNode._GridType === 'item') {
-        currentNode._JSXComponent = React.createElement(Grid, { item: true },
+        currentNode._JSXComponent = React.createElement(Grid, { item: true ,...currentNode._gridItem},
             React.createElement('p', {className:currentNode._name,...currentNode._GridStyle,style:currentNode._style}, currentNode._content));
     } else {
-        currentNode._JSXComponent = React.createElement(Grid, { item: true },
+        currentNode._JSXComponent = React.createElement(Grid, { item: true ,...currentNode._gridItem},
             React.createElement(Grid, { container: true ,className:currentNode._name,...currentNode._GridStyle,style:currentNode._style},currentNode._children.map(child=>child._JSXComponent)));
     }
 }

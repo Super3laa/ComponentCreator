@@ -45,8 +45,16 @@ export default function Tools() {
         dispatch(refreshTree())
     }
     const GridStyleChange = obj => {
-        Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
-        currentNode._GridStyle = {...currentNode._GridStyle,...obj};
+        let GridItem = {};
+        GridItem.xs = obj?.xs
+        GridItem.md = obj?.md
+        delete obj.xs;
+        delete obj.md
+        if(currentNode._GridType==='contaier'){
+            Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
+            currentNode._GridStyle = { ...currentNode._GridStyle, ...obj };
+        }
+        currentNode._gridItem = GridItem;
         setCurrentNode(currentNode);
         dispatch(refreshTree())
     }
@@ -80,10 +88,13 @@ export default function Tools() {
                     />
                 </Grid>
                 <Grid item>
-                    {
-                        currentNode._GridType === 'contaier'?
-                        <GridProperties GridStyleChange={GridStyleChange} GridStyle={currentNode._GridStyle} />:null
-                    }
+
+                    <GridProperties
+                        GridStyleChange={GridStyleChange}
+                        GridStyle={currentNode._GridStyle}
+                        GridItem={currentNode._gridItem}
+                        GridType={currentNode._GridType}
+                    />
                 </Grid>
             </Grid>
         </Paper>

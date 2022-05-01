@@ -35,6 +35,7 @@ function Node(_ref) {
   this._name = name;
   this._GridType = 'item';
   this._GridStyle = {};
+  this._gridItem = {};
   this._content = content;
   this._childrenCount = 0;
   this._style = {};
@@ -115,17 +116,17 @@ var deptFirstPreOrder = function deptFirstPreOrder(currentNode, callback, cb) {
 
 function renderElement(currentNode) {
   if (currentNode._GridType === 'item') {
-    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, {
+    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
       item: true
-    }, _react["default"].createElement('p', _objectSpread({
+    }, currentNode._gridItem), _react["default"].createElement('p', _objectSpread({
       className: currentNode._name
     }, currentNode._GridStyle, {
       style: currentNode._style
     }), currentNode._content));
   } else {
-    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, {
+    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
       item: true
-    }, _react["default"].createElement(_material.Grid, _objectSpread({
+    }, currentNode._gridItem), _react["default"].createElement(_material.Grid, _objectSpread({
       container: true,
       className: currentNode._name
     }, currentNode._GridStyle, {
