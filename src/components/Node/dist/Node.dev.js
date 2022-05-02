@@ -7,9 +7,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = Node;
 
-var _material = require("@mui/material");
+var Mui = _interopRequireWildcard(require("@mui/material"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _TreeItem = _interopRequireDefault(require("@mui/lab/TreeItem"));
 
@@ -27,12 +27,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function Node(_ref) {
   var name = _ref.name,
-      content = _ref.content;
+      content = _ref.content,
+      MUI = _ref.MUI;
   this._children = [];
   this._direction = '';
   this._JSXComponent = null;
+  this._MUI = MUI;
   this._JSX = null;
-  this._css = null;
   this._TreeView = null;
   this._name = name;
   this._GridType = 'item';
@@ -57,11 +58,7 @@ Node.prototype.addNode = function (node) {
 
 Node.prototype.render = function () {
   var node = deptFirstPreOrder(this, renderElement);
-  return node._JSXComponent;
-};
-
-Node.prototype.code = function () {
-  var node = deptFirstPreOrder(this, getCode);
+  return node;
 };
 
 Node.prototype.makeTree = function (onItemClick) {
@@ -122,16 +119,17 @@ var deptFirstPreOrder = function deptFirstPreOrder(currentNode, callback, cb) {
 
 function renderElement(currentNode) {
   if (currentNode._GridType === 'item') {
-    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
+    currentNode._JSXComponent = _react["default"].createElement(Mui['Grid'], _objectSpread({
       item: true
-    }, currentNode._gridItem), _react["default"].createElement('p', {
+    }, currentNode._gridItem), _react["default"].createElement(Mui[currentNode._MUI], {
       className: currentNode._name,
       style: currentNode._style
     }, currentNode._content));
+    currentNode._JSX = getCode(currentNode);
   } else {
-    currentNode._JSXComponent = _react["default"].createElement(_material.Grid, _objectSpread({
+    currentNode._JSXComponent = _react["default"].createElement(Mui['Grid'], _objectSpread({
       item: true
-    }, currentNode._gridItem), _react["default"].createElement(_material.Grid, _objectSpread({
+    }, currentNode._gridItem), _react["default"].createElement(Mui['Grid'], _objectSpread({
       container: true,
       className: currentNode._name
     }, currentNode._GridStyle, {
@@ -139,14 +137,22 @@ function renderElement(currentNode) {
     }), currentNode._children.map(function (child) {
       return child._JSXComponent;
     })));
+    currentNode._JSX = getCode(currentNode);
   }
 }
 
 function getCode(currentNode) {
+  var style = JSON.stringify(currentNode._style);
+  var tagProps = "className=\"".concat(currentNode._name, "\" ");
+
+  if (style !== '{}') {
+    tagProps += "style={".concat(style, "}");
+  }
+
   if (currentNode._GridType === 'item') {
     var tagChild = JSXMaker({
-      tagName: "p",
-      tagProps: "className=\"".concat(currentNode._name, "\""),
+      tagName: "".concat(currentNode._MUI),
+      tagProps: tagProps,
       tagChild: "".concat(currentNode._content)
     });
     var GridItem = JSXMaker({
@@ -154,7 +160,7 @@ function getCode(currentNode) {
       tagProps: "item ".concat(ObjtoString(currentNode._gridItem)),
       tagChild: tagChild
     });
-    currentNode._JSX = GridItem;
+    return GridItem;
   } else {
     var children = '';
 
@@ -164,7 +170,7 @@ function getCode(currentNode) {
 
     var GridContainer = JSXMaker({
       tagName: 'Grid',
-      tagProps: "className=\"".concat(currentNode._name, "\" grid "),
+      tagProps: tagProps,
       tagChild: children
     });
 
@@ -174,7 +180,7 @@ function getCode(currentNode) {
       tagChild: "".concat(GridContainer)
     });
 
-    currentNode._JSX = _GridItem; //
+    return _GridItem;
   }
 }
 

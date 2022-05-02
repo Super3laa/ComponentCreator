@@ -1,5 +1,5 @@
 import './Tools.css'
-import { Grid, IconButton, Paper } from "@mui/material";
+import { Grid, IconButton, Modal, Paper } from "@mui/material";
 import TreeView from '@mui/lab/TreeView';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import Node from './Node/Node'
 import { refreshTree } from '../redux/actions/Tree';
 import StyleEditor from 'react-style-editor';
 import GridProperties from './GridProperties'
+import AddNodeForm from './addNodeForm';
 
 
 export default function Tools() {
@@ -44,13 +45,19 @@ export default function Tools() {
         setCurrentNode(currentNode)
         dispatch(refreshTree())
     }
+    function handleAddNodeFormData(obj) {
+        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component });
+        currentNode.addNode(babyNode);
+        dispatch(refreshTree())
+        console.log(obj);
+    }
     const GridStyleChange = obj => {
         let GridItem = {};
         GridItem.xs = obj?.xs
         GridItem.md = obj?.md
         delete obj.xs;
         delete obj.md
-        if(currentNode._GridType==='contaier'){
+        if (currentNode._GridType === 'contaier') {
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
             currentNode._GridStyle = { ...currentNode._GridStyle, ...obj };
         }
@@ -59,15 +66,24 @@ export default function Tools() {
         setCurrentNode(currentNode);
         dispatch(refreshTree())
     }
+    const [toggleModal, setToggleModal] = useState(true);
+    const handletoggle = () => { setToggleModal(!toggleModal) };
     return (
         <Paper elevation={3} className="ToolsLayout">
+            {
+                toggleModal && <AddNodeForm
+                    toggleModal={toggleModal}
+                    handletoggle={handletoggle}
+                    handleAddNodeFormData={handleAddNodeFormData}
+                />
+            }
             <Grid container direction="column">
                 <Grid item>
                     <Grid container direction="row" justifyContent='space-around'>
                         <Grid item>TreeView</Grid>
                         <Grid item>
-                            <IconButton aria-label="delete">
-                                <AddIcon onClick={addNode} />
+                            <IconButton onClick={handletoggle}>
+                                <AddIcon />
                             </IconButton>
                         </Grid>
                     </Grid>

@@ -9,14 +9,13 @@ import babylon from "prettier/parser-babel";
 export default function DesignArea(props) {
     let Tree = useSelector(state => state.Tree);
     let MotherNode = Tree.MotherNode;
-    const [component, setComponent] = useState(null)
-    console.log(MotherNode.code())
+    MotherNode.render();
     return (
         <div className="DesignArea">
             <div className="ComponentLayout">
                 <Grid container direction="column">
                     <div className="component">
-                        {MotherNode.render()}
+                        {MotherNode._JSXComponent}
                     </div>
                     <Grid item>
                         <Button variant="outlined" startIcon={<CodeIcon />}>

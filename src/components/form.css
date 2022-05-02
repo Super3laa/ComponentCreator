@@ -1,0 +1,17 @@
+.FormLayout{
+    display: flex;
+    transition: 2s ease-in-out;
+    border:0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.formContent{
+    display: block;
+    margin:auto;
+    width: fit-content;
+    background-color: #f0f2f5;
+    padding: 1rem;
+    border-radius: 5px;
+}
