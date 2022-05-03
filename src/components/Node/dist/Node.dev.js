@@ -45,6 +45,11 @@ function Node(_ref) {
   this._style = {};
   this._props = props || {};
   this._parentName = 'Alaa';
+  this._paper = {
+    enable: false,
+    elevation: 0,
+    square: false
+  };
 }
 
 Node.prototype.direction = function (direction) {
@@ -86,6 +91,9 @@ Node.prototype.destroy = function (node) {
 
   parentNode._children.forEach(function (childNode, i) {
     if (childNode._name === node._name) {
+      parentNode._childrenCount--;
+      parentNode._GridType = parentNode._childrenCount > 0 ? 'container' : 'item';
+
       parentNode._children.splice(i, 1);
     }
   });
@@ -159,6 +167,18 @@ function renderElement(currentNode) {
       return child._JSXComponent;
     })));
     currentNode._JSX = getCode(currentNode);
+  }
+
+  if (currentNode._name === 'MotherNode' && currentNode._paper.enable) {
+    currentNode._JSXComponent = _react["default"].createElement(Mui['Paper'], _objectSpread({}, currentNode._paper), currentNode._JSXComponent);
+    currentNode._JSX = JSXMaker({
+      tagName: "Paper",
+      tagProps: "".concat(ObjtoString({
+        elevation: currentNode._paper.elevation ? currentNode._paper.elevation : 0,
+        square: currentNode._paper.square ? currentNode._paper.square : false
+      })),
+      tagChild: getCode(currentNode)
+    });
   }
 }
 

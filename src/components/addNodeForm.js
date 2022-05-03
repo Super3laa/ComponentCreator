@@ -70,12 +70,10 @@ export default function AddNodeForm({ handletoggle, toggleModal, handleAddNodeFo
                     <Controller
                         render={({ field }) => {
                             return <TextField
-                                select
                                 fullWidth
                                 onChange={event => { field.onChange(event.target.value) }}
+                                label="MUI Component"
                             >
-                                <MenuItem value={"Grid"}>Grid</MenuItem>
-                                <MenuItem value={"Typography"}>Typography</MenuItem>
                             </TextField>
                         }}
                         name="component"

@@ -8,7 +8,7 @@ import Tools from './Tools';
 
 export default function Layout(){
     const dispatch = useDispatch();
-    let MotherNode = new Node({ name: 'MotherNode' })
+    let MotherNode = new Node({ name: 'MotherNode' ,MUI:'Grid'})
     let child1 = new Node({ name: "child1" })
     let child2 = new Node({ name: "child2" })
     let paragraph1 = new Node({ name: "paragraph1", content: "one" ,MUI:'Typography'})

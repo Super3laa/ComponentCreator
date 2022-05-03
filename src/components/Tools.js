@@ -1,7 +1,7 @@
 import './Tools.css'
-import { Grid, IconButton, Modal, Paper, Typography } from "@mui/material";
+import { Grid, IconButton, Paper, Typography } from "@mui/material";
 import TreeView from '@mui/lab/TreeView';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -55,11 +55,14 @@ export default function Tools() {
         dispatch(refreshTree())
     }
     const GridStyleChange = obj => {
-        let GridItem = {};
-        GridItem.xs = obj?.xs
-        GridItem.md = obj?.md
-        delete obj.xs;
-        delete obj.md
+        let GridItem = obj.GridItem;
+        delete obj.GridItem;
+        let Paper = obj.paper;
+        delete obj.paper
+        if (currentNode._name ==='MotherNode'){
+            Object.keys(Paper).forEach(key => Paper[key] === undefined && delete Paper[key])
+            currentNode._paper = Paper;
+        }
         if (currentNode._GridType === 'container') {
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
             currentNode._GridStyle = { ...currentNode._GridStyle, ...obj };
@@ -136,6 +139,8 @@ export default function Tools() {
                         GridStyle={currentNode._GridStyle}
                         GridItem={currentNode._gridItem}
                         GridType={currentNode._GridType}
+                        Paper={currentNode._paper}
+                        NodeName={currentNode._name}
                     />
                 </Grid>
             </Grid>
