@@ -3,18 +3,18 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useForm, Controller } from "react-hook-form";
-import { TextField } from '@mui/material';
+import { TextField, Typography ,Grid} from '@mui/material';
 
 export default function GridProperties({ GridStyleChange, GridStyle, GridItem, GridType }) {
     const { handleSubmit, control } = useForm();
 
     return (
         <form onChange={handleSubmit(GridStyleChange)}>
-            {GridType === 'contaier' ?
-
-                <div>
-                    <div>
-                        <label>direction</label>
+            <Grid container spacing={1} justifyContent='space-between'>
+            {GridType === 'container' ?
+                <>
+                    <Grid item xs={12}>
+                        <label><Typography variant={'subtitle1'}>Direction</Typography></label>
                         <Controller
                             render={({ field }) => {
                                 return <RadioGroup
@@ -36,9 +36,9 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                             control={control}
 
                         />
-                    </div>
-                    <div>
-                        <label>justifyContent</label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <label><Typography variant={'subtitle1'}>Justify Content</Typography></label>
                         <Controller
                             render={({ field }) => {
                                 return <RadioGroup
@@ -61,9 +61,9 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                             name="justifyContent"
                             control={control}
                         />
-                    </div>
-                    <div>
-                        <label>alignItems</label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <label><Typography variant={'subtitle1'}>Align Items</Typography></label>
                         <Controller
                             render={({ field }) => {
                                 return <RadioGroup
@@ -85,38 +85,37 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                             name="alignItems"
                             control={control}
                         />
-                    </div>
-                </div> : null}
-            <div>
-                <div>
-                    <label>itemPropsXS</label>
+                    </Grid>
+                </> : null}
+                <Grid item xs={5}>
+                    <label><Typography variant={'subtitle1'}>Item xs</Typography></label>
                     <Controller
                         render={({ field }) => {
                             return <TextField
                                 value={GridItem.xs?GridItem.xs:''}
                                 inputProps={{ inputMode: 'numeric', pattern: '[1-12]*' }}
                                 onChange={event => { field.onChange(event.target.value) }}
-                                id="outlined-basic" label="Outlined" variant="outlined" />
+                                id="outlined-basic" label="xs" variant="outlined" />
                         }}
                         name="xs"
                         control={control}
                     />
-                </div>
-                <div>
-                    <label>itemPropsMD</label>
+                </Grid>
+                <Grid item xs={5}>
+                    <label><Typography variant={'subtitle1'}>Item md</Typography></label>
                     <Controller
                         render={({ field }) => {
                             return <TextField
                                 value={GridItem.md?GridItem.md:''}
                                 inputProps={{ inputMode: 'numeric', pattern: '[1-12]*' }}
                                 onChange={event => { field.onChange(event.target.value) }}
-                                id="outlined-basic" label="Outlined" variant="outlined" />
+                                id="outlined-basic" label="md" variant="outlined" />
                         }}
                         name="md"
                         control={control}
                     />
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </form>
     )
 }

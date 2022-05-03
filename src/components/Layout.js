@@ -23,7 +23,7 @@ export default function Layout(){
     MotherNode.updateNode('MotherNode',{justifyContent:'space-around'})
     dispatch(updateMotherNode(MotherNode))
     return (
-        <Grid container>
+        <Grid container style={{minHeight:'100vh'}}>
             <Grid item xs={9}>
                 <DesignArea MotherNode={MotherNode}/>
             </Grid>

@@ -1,11 +1,14 @@
 import './Tools.css'
-import { Grid, IconButton, Modal, Paper } from "@mui/material";
+import { Grid, IconButton, Modal, Paper, Typography } from "@mui/material";
 import TreeView from '@mui/lab/TreeView';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import Node from './Node/Node'
 import { refreshTree } from '../redux/actions/Tree';
 import StyleEditor from 'react-style-editor';
@@ -21,11 +24,6 @@ export default function Tools() {
 
     function onItemClick(currentNode) {
         setCurrentNode(currentNode);
-        dispatch(refreshTree())
-    }
-    function addNode() {
-        let babyNode = new Node({ name: "paragraph4", content: "four" });
-        currentNode.addNode(babyNode);
         dispatch(refreshTree())
     }
     function converCSSToString(value) {
@@ -47,10 +45,10 @@ export default function Tools() {
     }
     function handleAddNodeFormData(obj) {
         let props = {};
-        obj.props.forEach((prop)=>{
-            props[prop.key]=prop.value;
+        obj.props.forEach((prop) => {
+            props[prop.key] = prop.value;
         })
-        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component,props });
+        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component, props });
         currentNode.addNode(babyNode);
         dispatch(refreshTree())
     }
@@ -60,7 +58,7 @@ export default function Tools() {
         GridItem.md = obj?.md
         delete obj.xs;
         delete obj.md
-        if (currentNode._GridType === 'contaier') {
+        if (currentNode._GridType === 'container') {
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
             currentNode._GridStyle = { ...currentNode._GridStyle, ...obj };
         }
@@ -80,14 +78,29 @@ export default function Tools() {
                     handleAddNodeFormData={handleAddNodeFormData}
                 />
             }
-            <Grid container direction="column">
+            <Grid container direction="column" spacing={1}>
                 <Grid item>
-                    <Grid container direction="row" justifyContent='space-around'>
-                        <Grid item>TreeView</Grid>
+                    <Grid container direction="row" alignItems='center' justifyContent='space-between' style={{ padding: "0 5px", color: "#2b373e" }} >
+                        <Grid item><Typography variant={'h6'}>TreeView</Typography></Grid>
                         <Grid item>
-                            <IconButton onClick={handletoggle}>
-                                <AddIcon />
-                            </IconButton>
+                            <Grid container>
+                                <Grid item >
+                                    <IconButton onClick={handletoggle}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item >
+                                    <IconButton onClick={handletoggle}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item >
+                                    <IconButton onClick={handletoggle}>
+                                        <AddIcon />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+
                         </Grid>
                     </Grid>
                 </Grid>
@@ -108,7 +121,6 @@ export default function Tools() {
                     />
                 </Grid>
                 <Grid item>
-
                     <GridProperties
                         GridStyleChange={GridStyleChange}
                         GridStyle={currentNode._GridStyle}

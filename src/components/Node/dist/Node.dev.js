@@ -55,7 +55,7 @@ Node.prototype.addNode = function (node) {
 
   this._childrenCount++;
   this._direction = 'row';
-  this._GridType = 'contaier';
+  this._GridType = 'container';
 };
 
 Node.prototype.render = function () {
@@ -153,6 +153,7 @@ function getCode(currentNode) {
   }
 
   tagProps += ObjtoString(currentNode._props);
+  tagProps += "".concat(currentNode._GridType === 'container' ? "container ".concat(ObjtoString(currentNode._GridStyle)) : '');
 
   if (currentNode._GridType === 'item') {
     var tagChild = JSXMaker({
@@ -193,7 +194,7 @@ function ObjtoString(obj) {
   var str = '';
   Object.keys(obj).forEach(function (key) {
     if (obj[key] !== '') {
-      str += "".concat(key, "={").concat(obj[key], "} ");
+      str += "".concat(key, "={'").concat(obj[key], "'} ");
     }
   });
   return str;

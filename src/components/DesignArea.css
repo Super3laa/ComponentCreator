@@ -1,21 +1,21 @@
 .DesignArea{
     display: flex;
-    min-height: 100vh;
 }
 
 .ComponentLayout{
-    margin: auto;
-}
+    padding: 1rem;
+    width: 100%;}
 .component{
     resize: both;
     overflow: auto;
+    padding: 5rem;
 }
 pre {
     background: #eee;
     padding: 1rem;
     overflow: auto;
     border-radius: 3px;
-    max-width: 80ch;
+    width:100%
   }
   
   pre code {

@@ -30,7 +30,7 @@ Node.prototype.addNode = function (node) {
     this._children.push(node);
     this._childrenCount++;
     this._direction = 'row';
-    this._GridType = 'contaier';
+    this._GridType = 'container';
 }
 Node.prototype.render = function () {
     let node = deptFirstPreOrder(this, renderElement)
@@ -100,6 +100,7 @@ function getCode(currentNode) {
         tagProps += `style={${style}}`;
     }
     tagProps += ObjtoString(currentNode._props)
+    tagProps += `${currentNode._GridType==='container'? `container ${ObjtoString(currentNode._GridStyle)}`:''}`
     if (currentNode._GridType === 'item') {
         let tagChild = JSXMaker({
             tagName: `${currentNode._MUI} `,
@@ -135,7 +136,7 @@ function ObjtoString(obj) {
     let str = ''
     Object.keys(obj).forEach(function (key) {
         if (obj[key] !== '') {
-            str += `${key}={${obj[key]}} `
+            str += `${key}={'${obj[key]}'} `
         }
     });
     return str;

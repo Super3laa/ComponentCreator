@@ -3,3 +3,11 @@
     margin: 7px;
     min-height: 100%;
 }
+.css-1g86id8-MuiTreeItem-content.Mui-selected {
+    background-color: #E8F5E9;
+    color: #4CAF50;
+    width: inherit;
+}
+.css-1g86id8-MuiTreeItem-content.Mui:hover {
+    width: inherit;
+}
