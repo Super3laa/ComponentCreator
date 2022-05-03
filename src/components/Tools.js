@@ -21,6 +21,7 @@ export default function Tools() {
     let MotherNode = Tree.MotherNode;
     const dispatch = useDispatch();
     const [currentNode, setCurrentNode] = useState(MotherNode);
+    const [toggleModal, setToggleModal] = useState(false);
 
     function onItemClick(currentNode) {
         setCurrentNode(currentNode);
@@ -45,7 +46,8 @@ export default function Tools() {
     }
     function handleAddNodeFormData(obj) {
         let props = {};
-        obj.props.forEach((prop) => {
+        Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
+        obj?.props && obj.props.forEach((prop) => {
             props[prop.key] = prop.value;
         })
         let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component, props });
@@ -67,7 +69,15 @@ export default function Tools() {
         setCurrentNode(currentNode);
         dispatch(refreshTree())
     }
-    const [toggleModal, setToggleModal] = useState(false);
+    const handleDeleteNode = () => {
+        if (currentNode._parentName === 'Alaa') {
+            alert("I'm Undestroyable MotherFucker");
+        } else {
+            MotherNode.destroy(currentNode);
+            setCurrentNode(MotherNode);
+            dispatch(refreshTree());
+        }
+    }
     const handletoggle = () => { setToggleModal(!toggleModal) };
     return (
         <Paper elevation={3} className="ToolsLayout">
@@ -85,7 +95,7 @@ export default function Tools() {
                         <Grid item>
                             <Grid container>
                                 <Grid item >
-                                    <IconButton onClick={handletoggle}>
+                                    <IconButton onClick={handleDeleteNode}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Grid>
