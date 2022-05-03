@@ -23,7 +23,7 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                                     onChange={(data) => {
                                         field.onChange(data.target.value);
                                     }}
-                                    value={GridStyle.direction}
+                                    value={GridStyle.direction?GridStyle.direction:''}
                                 >
                                     <FormControlLabel value="row" control={<Radio />} label="row" />
                                     <FormControlLabel value="row-reverse" control={<Radio />} label="row-reverse" />
@@ -47,7 +47,7 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                                         field.onChange(data.target.value);
                                     }}
                                     name="justifyContent-buttons-group"
-                                    value={GridStyle.justifyContent}
+                                    value={GridStyle.justifyContent ? GridStyle.justifyContent:''}
                                 >
                                     <FormControlLabel value="flex-start" control={<Radio />} label="flex-start" />
                                     <FormControlLabel value="center" control={<Radio />} label="center" />
@@ -72,7 +72,7 @@ export default function GridProperties({ GridStyleChange, GridStyle, GridItem, G
                                         field.onChange(data.target.value);
                                     }}
                                     name="alignItems-buttons-group"
-                                    value={GridStyle.alignItems}
+                                    value={GridStyle.alignItems ? GridStyle.alignItems :''}
                                 >
                                     <FormControlLabel value="flex-start" control={<Radio />} label="flex-start" />
                                     <FormControlLabel value="center" control={<Radio />} label="center" />
