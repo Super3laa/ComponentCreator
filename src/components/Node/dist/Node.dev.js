@@ -28,7 +28,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function Node(_ref) {
   var name = _ref.name,
       content = _ref.content,
-      MUI = _ref.MUI;
+      MUI = _ref.MUI,
+      props = _ref.props;
   this._children = [];
   this._direction = '';
   this._JSXComponent = null;
@@ -42,6 +43,7 @@ function Node(_ref) {
   this._content = content;
   this._childrenCount = 0;
   this._style = {};
+  this._props = props || {};
 }
 
 Node.prototype.direction = function (direction) {
@@ -121,10 +123,11 @@ function renderElement(currentNode) {
   if (currentNode._GridType === 'item') {
     currentNode._JSXComponent = _react["default"].createElement(Mui['Grid'], _objectSpread({
       item: true
-    }, currentNode._gridItem), _react["default"].createElement(Mui[currentNode._MUI], {
-      className: currentNode._name,
+    }, currentNode._gridItem), _react["default"].createElement(Mui[currentNode._MUI], _objectSpread({
+      className: currentNode._name
+    }, currentNode._props, {
       style: currentNode._style
-    }, currentNode._content));
+    }), currentNode._content));
     currentNode._JSX = getCode(currentNode);
   } else {
     currentNode._JSXComponent = _react["default"].createElement(Mui['Grid'], _objectSpread({
@@ -149,9 +152,11 @@ function getCode(currentNode) {
     tagProps += "style={".concat(style, "}");
   }
 
+  tagProps += ObjtoString(currentNode._props);
+
   if (currentNode._GridType === 'item') {
     var tagChild = JSXMaker({
-      tagName: "".concat(currentNode._MUI),
+      tagName: "".concat(currentNode._MUI, " "),
       tagProps: tagProps,
       tagChild: "".concat(currentNode._content)
     });

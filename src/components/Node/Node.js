@@ -3,7 +3,7 @@ import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import * as Mui from '@mui/material';
 
-export default function Node({ name, content,MUI }) {
+export default function Node({ name, content,MUI,props }) {
     this._children = [];
     this._direction = '';
     this._JSXComponent = null;
@@ -17,6 +17,7 @@ export default function Node({ name, content,MUI }) {
     this._content = content;
     this._childrenCount = 0;
     this._style = {};
+    this._props=props || {};
 
 }
 
@@ -83,7 +84,7 @@ const deptFirstPreOrder = (currentNode, callback, cb) => {
 function renderElement(currentNode) {
     if (currentNode._GridType === 'item') {
         currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
-            React.createElement(Mui[currentNode._MUI], { className: currentNode._name, style: currentNode._style }, currentNode._content));
+            React.createElement(Mui[currentNode._MUI], { className: currentNode._name,...currentNode._props, style: currentNode._style }, currentNode._content));
         currentNode._JSX = getCode(currentNode);
 
     } else {
@@ -98,9 +99,10 @@ function getCode(currentNode) {
     if (style !== '{}') {
         tagProps += `style={${style}}`;
     }
+    tagProps += ObjtoString(currentNode._props)
     if (currentNode._GridType === 'item') {
         let tagChild = JSXMaker({
-            tagName: `${currentNode._MUI}`,
+            tagName: `${currentNode._MUI} `,
             tagProps,
             tagChild: `${currentNode._content}`
         })

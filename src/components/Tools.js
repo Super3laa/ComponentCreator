@@ -46,10 +46,13 @@ export default function Tools() {
         dispatch(refreshTree())
     }
     function handleAddNodeFormData(obj) {
-        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component });
+        let props = {};
+        obj.props.forEach((prop)=>{
+            props[prop.key]=prop.value;
+        })
+        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component,props });
         currentNode.addNode(babyNode);
         dispatch(refreshTree())
-        console.log(obj);
     }
     const GridStyleChange = obj => {
         let GridItem = {};
@@ -66,7 +69,7 @@ export default function Tools() {
         setCurrentNode(currentNode);
         dispatch(refreshTree())
     }
-    const [toggleModal, setToggleModal] = useState(true);
+    const [toggleModal, setToggleModal] = useState(false);
     const handletoggle = () => { setToggleModal(!toggleModal) };
     return (
         <Paper elevation={3} className="ToolsLayout">
