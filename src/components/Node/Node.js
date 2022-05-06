@@ -99,28 +99,33 @@ const deptFirstPreOrder = (currentNode, callback, cb) => {
     return currentNode
 }
 function renderElement(currentNode) {
-    if (currentNode._GridType === 'item') {
-        currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
-            React.createElement(Mui[currentNode._MUI], { className: currentNode._name, ...currentNode._props, style: currentNode._style }, currentNode._content));
-        currentNode._JSX = getCode(currentNode);
-
-    } else {
-        currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
-            React.createElement(Mui['Grid'], { container: true, className: currentNode._name, ...currentNode._GridStyle, style: currentNode._style }, currentNode._children.map(child => child._JSXComponent)));
-        currentNode._JSX = getCode(currentNode);
+    try {
+        if (currentNode._GridType === 'item') {
+            currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
+                React.createElement(Mui[currentNode._MUI], { className: currentNode._name, ...currentNode._props, style: currentNode._style }, currentNode.content));
+            currentNode._JSX = getCode(currentNode);
+    
+        } else {
+            currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
+                React.createElement(Mui['Grid'], { container: true, className: currentNode._name, ...currentNode._GridStyle, style: currentNode._style }, currentNode._children.map(child => child._JSXComponent)));
+            currentNode._JSX = getCode(currentNode);
+        }
+        if (currentNode._name === 'MotherNode' && currentNode._paper.enable) {
+            currentNode._JSXComponent = React.createElement(Mui['Paper'],
+                { ...currentNode._paper }, currentNode._JSXComponent);
+            currentNode._JSX = JSXMaker({
+                tagName: `Paper`,
+                tagProps: `${ObjtoString({
+                    elevation: currentNode._paper.elevation ? currentNode._paper.elevation : 0,
+                    square: currentNode._paper.square ? currentNode._paper.square : false
+                })}`,
+                tagChild: getCode(currentNode)
+            })
+        }
+    } catch (error) {
+        console.log(error)
     }
-    if (currentNode._name === 'MotherNode' && currentNode._paper.enable) {
-        currentNode._JSXComponent = React.createElement(Mui['Paper'],
-            { ...currentNode._paper }, currentNode._JSXComponent);
-        currentNode._JSX = JSXMaker({
-            tagName: `Paper`,
-            tagProps: `${ObjtoString({
-                elevation: currentNode._paper.elevation ? currentNode._paper.elevation : 0,
-                square: currentNode._paper.square ? currentNode._paper.square : false
-            })}`,
-            tagChild: getCode(currentNode)
-        })
-    }
+   
 }
 function getCode(currentNode) {
     let style = JSON.stringify(currentNode._style);
