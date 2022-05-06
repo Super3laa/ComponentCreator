@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, Modal, Select, TextField } from '@mui/material';
+import { Button, Grid, MenuItem, Modal, Select, Switch, TextField, Typography } from '@mui/material';
 //import * as Mui from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,10 +14,10 @@ export default function AddNodeForm({ handletoggle, toggleModal, handleAddNodeFo
                     render={({ field }) => {
                         return <TextField
                             fullWidth
-                            onChange={event => {field.onChange(event.target.value) }}
-                            id={`props[${appendProps.length }].key`} label="Key" />
+                            onChange={event => { field.onChange(event.target.value) }}
+                            id={`props[${appendProps.length}].key`} label="Key" />
                     }}
-                    name={`props[${appendProps.length }].key`}
+                    name={`props[${appendProps.length}].key`}
                     control={control}
                 />
             </Grid>
@@ -27,9 +27,9 @@ export default function AddNodeForm({ handletoggle, toggleModal, handleAddNodeFo
                         return <TextField
                             fullWidth
                             onChange={event => { field.onChange(event.target.value) }}
-                            id={`props[${appendProps.length }].value`} label="Value" />
+                            id={`props[${appendProps.length}].value`} label="Value" />
                     }}
-                    name={`props[${appendProps.length }].value`}
+                    name={`props[${appendProps.length}].value`}
                     control={control}
                 />
             </Grid>
@@ -81,8 +81,27 @@ export default function AddNodeForm({ handletoggle, toggleModal, handleAddNodeFo
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="outlined" onClick={appendProp}>add Prop</Button>
+                    <Grid container justifyContent="space-between" alignItems='center'>
+                        <Grid item >
+                            <Button variant="outlined" onClick={appendProp}>add Prop</Button>
+                        </Grid>
+                        <Grid item>
+                            <label><Typography variant={'subtitle1'}>Self Closing Tag</Typography></label>
+                            <Controller
+                                render={({ field }) => {
+                                    return <Switch
+                                        defaultValue={false}
+                                        onChange={event => { field.onChange(event.target.checked) }}
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                }}
+                                name="selfClosingTag"
+                                control={control}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
+
                 {appendProps.map(row => {
                     return row
                 })}

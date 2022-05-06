@@ -14,6 +14,7 @@ import { refreshTree } from '../redux/actions/Tree';
 import StyleEditor from 'react-style-editor';
 import GridProperties from './GridProperties'
 import AddNodeForm from './addNodeForm';
+import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 
 
 export default function Tools() {
@@ -46,11 +47,14 @@ export default function Tools() {
     }
     function handleAddNodeFormData(obj) {
         let props = {};
+        if(obj.name === undefined){
+            obj.name = uniqueNamesGenerator({dictionaries:[colors,[obj.component]]})
+        }
         Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
         obj?.props && obj.props.forEach((prop) => {
             props[prop.key] = prop.value;
         })
-        let babyNode = new Node({ name: obj.name, content: obj.content, MUI: obj.component, props });
+        let babyNode = new Node({ name: obj.name, selfClosingTag:obj.selfClosingTag,content: obj.content, MUI: obj.component, props });
         currentNode.addNode(babyNode);
         dispatch(refreshTree())
     }

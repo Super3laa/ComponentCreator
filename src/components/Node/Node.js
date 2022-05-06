@@ -2,23 +2,24 @@ import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import * as Mui from '@mui/material';
 
-export default function Node({ name, content,MUI,props }) {
+export default function Node({ name, content, MUI, props, selfClosingTag }) {
     this._children = [];
     this._direction = '';
     this._JSXComponent = null;
-    this._MUI  = MUI;
+    this._MUI = MUI;
+    this._selfClosingTag = selfClosingTag || false;
     this._JSX = null;
     this._TreeView = null;
     this._name = name;
     this._GridType = 'item';
     this._GridStyle = {};
     this._gridItem = {};
-    this._content = content||'';
+    this._content = content || '';
     this._childrenCount = 0;
     this._style = {};
-    this._props=props || {};
+    this._props = props || {};
     this._parentName = 'Alaa';
-    this._paper = {enable:false,elevation:0,square:false}
+    this._paper = { enable: false, elevation: 0, square: false }
 
 }
 
@@ -28,7 +29,7 @@ Node.prototype.direction = function (direction) {
 }
 Node.prototype.addNode = function (node) {
     node._parentName = this._name;
-    if(node.MUI === 'Grid'){
+    if (node.MUI === 'Grid') {
         node._direction = 'row';
         this._GridType = 'item';
     }
@@ -51,15 +52,15 @@ Node.prototype.updateNode = function (nodeName, Obj) {
     foundNode._GridStyle = Obj;
 }
 
-Node.prototype.destroy = function(node) {
+Node.prototype.destroy = function (node) {
     let parentNode = depthFirstSearch(this, node._parentName);
-    parentNode._children.forEach((childNode,i)=>{
-        if(childNode._name === node._name){
+    parentNode._children.forEach((childNode, i) => {
+        if (childNode._name === node._name) {
             parentNode._childrenCount--;
-            parentNode._GridType = parentNode._childrenCount > 0?'container': 'item';
-            parentNode._children.splice(i,1);
+            parentNode._GridType = parentNode._childrenCount > 0 ? 'container' : 'item';
+            parentNode._children.splice(i, 1);
         }
-    })    
+    })
 }
 function depthFirstSearch(currentNode, name) {
     let retVal;
@@ -100,7 +101,7 @@ const deptFirstPreOrder = (currentNode, callback, cb) => {
 function renderElement(currentNode) {
     if (currentNode._GridType === 'item') {
         currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
-            React.createElement(Mui[currentNode._MUI], { className: currentNode._name,...currentNode._props, style: currentNode._style }, currentNode._content));
+            React.createElement(Mui[currentNode._MUI], { className: currentNode._name, ...currentNode._props, style: currentNode._style }, currentNode._content));
         currentNode._JSX = getCode(currentNode);
 
     } else {
@@ -108,13 +109,15 @@ function renderElement(currentNode) {
             React.createElement(Mui['Grid'], { container: true, className: currentNode._name, ...currentNode._GridStyle, style: currentNode._style }, currentNode._children.map(child => child._JSXComponent)));
         currentNode._JSX = getCode(currentNode);
     }
-    if (currentNode._name==='MotherNode' && currentNode._paper.enable){
+    if (currentNode._name === 'MotherNode' && currentNode._paper.enable) {
         currentNode._JSXComponent = React.createElement(Mui['Paper'],
-         {...currentNode._paper},currentNode._JSXComponent);
-        currentNode._JSX =  JSXMaker({
+            { ...currentNode._paper }, currentNode._JSXComponent);
+        currentNode._JSX = JSXMaker({
             tagName: `Paper`,
-            tagProps: `${ObjtoString({elevation:currentNode._paper.elevation?currentNode._paper.elevation:0,
-                square:currentNode._paper.square?currentNode._paper.square:false})}`,
+            tagProps: `${ObjtoString({
+                elevation: currentNode._paper.elevation ? currentNode._paper.elevation : 0,
+                square: currentNode._paper.square ? currentNode._paper.square : false
+            })}`,
             tagChild: getCode(currentNode)
         })
     }
@@ -126,17 +129,19 @@ function getCode(currentNode) {
         tagProps += `style={${style}}`;
     }
     tagProps += ObjtoString(currentNode._props)
-    tagProps += `${currentNode._GridType==='container'? `container ${ObjtoString(currentNode._GridStyle)}`:''}`
+    tagProps += `${currentNode._GridType === 'container' ? `container ${ObjtoString(currentNode._GridStyle)}` : ''}`
     if (currentNode._GridType === 'item') {
         let tagChild = JSXMaker({
             tagName: `${currentNode._MUI} `,
             tagProps,
-            tagChild: `${currentNode._content}`
+            tagChild: `${currentNode._content}`,
+            selfClosingTag: currentNode._selfClosingTag
         })
         let GridItem = JSXMaker({
             tagName: 'Grid',
             tagProps: `item ${ObjtoString(currentNode._gridItem)}`,
-            tagChild
+            tagChild,
+            selfClosingTag: false
         })
         return GridItem;
     } else {
@@ -147,11 +152,13 @@ function getCode(currentNode) {
             tagName: 'Grid',
             tagProps,
             tagChild: children,
+            selfClosingTag: currentNode._selfClosingTag
         })
         let GridItem = JSXMaker({
             tagName: `Grid`,
             tagProps: `item ${ObjtoString(currentNode._gridItem)}`,
-            tagChild: `${GridContainer}`
+            tagChild: `${GridContainer}`,
+            selfClosingTag: false
         })
         return GridItem;
     }
@@ -167,9 +174,14 @@ function ObjtoString(obj) {
     });
     return str;
 }
-function JSXMaker({ tagName, tagProps, tagChild }) {
-    return `<${tagName} ${tagProps}>
-                        ${tagChild}
-                    </${tagName}>
-                    `
+function JSXMaker({ tagName, tagProps, tagChild, selfClosingTag }) {
+    console.log(`<${tagName} ${tagProps} ${selfClosingTag ? '' : '>'}
+    ${selfClosingTag ? '' : tagChild}
+${selfClosingTag ? '/>' : `</${tagName}>`}
+`)
+    return (`<${tagName} ${tagProps} ${selfClosingTag ? '' : '>'}
+    ${selfClosingTag ? '' : tagChild}
+${selfClosingTag ? '/>' : `</${tagName}>`}
+`)
 }
+

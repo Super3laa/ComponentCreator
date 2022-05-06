@@ -29,11 +29,13 @@ function Node(_ref) {
   var name = _ref.name,
       content = _ref.content,
       MUI = _ref.MUI,
-      props = _ref.props;
+      props = _ref.props,
+      selfClosingTag = _ref.selfClosingTag;
   this._children = [];
   this._direction = '';
   this._JSXComponent = null;
   this._MUI = MUI;
+  this._selfClosingTag = selfClosingTag || false;
   this._JSX = null;
   this._TreeView = null;
   this._name = name;
@@ -197,12 +199,14 @@ function getCode(currentNode) {
     var tagChild = JSXMaker({
       tagName: "".concat(currentNode._MUI, " "),
       tagProps: tagProps,
-      tagChild: "".concat(currentNode._content)
+      tagChild: "".concat(currentNode._content),
+      selfClosingTag: currentNode._selfClosingTag
     });
     var GridItem = JSXMaker({
       tagName: 'Grid',
       tagProps: "item ".concat(ObjtoString(currentNode._gridItem)),
-      tagChild: tagChild
+      tagChild: tagChild,
+      selfClosingTag: false
     });
     return GridItem;
   } else {
@@ -215,13 +219,15 @@ function getCode(currentNode) {
     var GridContainer = JSXMaker({
       tagName: 'Grid',
       tagProps: tagProps,
-      tagChild: children
+      tagChild: children,
+      selfClosingTag: currentNode._selfClosingTag
     });
 
     var _GridItem = JSXMaker({
       tagName: "Grid",
       tagProps: "item ".concat(ObjtoString(currentNode._gridItem)),
-      tagChild: "".concat(GridContainer)
+      tagChild: "".concat(GridContainer),
+      selfClosingTag: false
     });
 
     return _GridItem;
@@ -241,6 +247,8 @@ function ObjtoString(obj) {
 function JSXMaker(_ref2) {
   var tagName = _ref2.tagName,
       tagProps = _ref2.tagProps,
-      tagChild = _ref2.tagChild;
-  return "<".concat(tagName, " ").concat(tagProps, ">\n                        ").concat(tagChild, "\n                    </").concat(tagName, ">\n                    ");
+      tagChild = _ref2.tagChild,
+      selfClosingTag = _ref2.selfClosingTag;
+  console.log("<".concat(tagName, " ").concat(tagProps, " ").concat(selfClosingTag ? '' : '>', "\n    ").concat(selfClosingTag ? '' : tagChild, "\n").concat(selfClosingTag ? '/>' : "</".concat(tagName, ">"), "\n"));
+  return "<".concat(tagName, " ").concat(tagProps, " ").concat(selfClosingTag ? '' : '>', "\n    ").concat(selfClosingTag ? '' : tagChild, "\n").concat(selfClosingTag ? '/>' : "</".concat(tagName, ">"), "\n");
 }
