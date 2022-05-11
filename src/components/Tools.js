@@ -13,8 +13,8 @@ import Node from './Node/Node'
 import { refreshTree } from '../redux/actions/Tree';
 import StyleEditor from 'react-style-editor';
 import GridProperties from './GridProperties'
-import AddNodeForm from './addNodeForm';
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+import NodeForm from './NodeForm';
+import { uniqueNamesGenerator, colors } from 'unique-names-generator';
 
 
 export default function Tools() {
@@ -22,7 +22,7 @@ export default function Tools() {
     let MotherNode = Tree.MotherNode;
     const dispatch = useDispatch();
     const [currentNode, setCurrentNode] = useState(MotherNode);
-    const [toggleModal, setToggleModal] = useState(false);
+    const [toggleModal, setToggleModal] = useState({visibility:false,type:'Add'});
 
     function onItemClick(currentNode) {
         setCurrentNode(currentNode);
@@ -45,9 +45,24 @@ export default function Tools() {
         setCurrentNode(currentNode)
         dispatch(refreshTree())
     }
+    function handleEditNodeFormData(obj) {
+        console.log(obj)
+        let props = {};
+        if(obj.name === undefined || obj.name===''){
+            obj.name = uniqueNamesGenerator({dictionaries:[colors,[obj.component]]})
+        }
+        Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
+        obj?.props && obj.props.forEach((prop) => {
+            props[prop.key] = prop.value;
+        })
+        obj.props= props;
+        console.log(obj)
+        currentNode.editNode(obj);
+        dispatch(refreshTree())
+    }
     function handleAddNodeFormData(obj) {
         let props = {};
-        if(obj.name === undefined){
+        if(obj.name === undefined || obj.name===''){
             obj.name = uniqueNamesGenerator({dictionaries:[colors,[obj.component]]})
         }
         Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
@@ -85,14 +100,20 @@ export default function Tools() {
             dispatch(refreshTree());
         }
     }
-    const handletoggle = () => { setToggleModal(!toggleModal) };
+    const handletoggle = () => { setToggleModal({...toggleModal,visibility:!(toggleModal.visibility)})};
+    const handletoggleButton = (type) => { setToggleModal({type,visibility:!(toggleModal.visibility)})};
+
     return (
         <Paper elevation={3} className="ToolsLayout">
             {
-                toggleModal && <AddNodeForm
-                    toggleModal={toggleModal}
+                toggleModal.visibility && <NodeForm
+                    toggleModal={toggleModal.visibility}
                     handletoggle={handletoggle}
                     handleAddNodeFormData={handleAddNodeFormData}
+                    handleEditNodeFormData={handleEditNodeFormData}
+                    type={toggleModal.type}
+                    currentNode={currentNode}
+
                 />
             }
             <Grid container direction="column" spacing={1}>
@@ -107,12 +128,12 @@ export default function Tools() {
                                     </IconButton>
                                 </Grid>
                                 <Grid item >
-                                    <IconButton onClick={handletoggle}>
+                                    <IconButton onClick={()=>handletoggleButton('Edit')}>
                                         <EditIcon />
                                     </IconButton>
                                 </Grid>
                                 <Grid item >
-                                    <IconButton onClick={handletoggle}>
+                                    <IconButton onClick={()=>handletoggleButton('Add')}>
                                         <AddIcon />
                                     </IconButton>
                                 </Grid>

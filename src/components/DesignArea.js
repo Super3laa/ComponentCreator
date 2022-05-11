@@ -1,11 +1,10 @@
 import { Button, Grid } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './DesignArea.css'
 import CodeIcon from '@mui/icons-material/Code';
 import { useSelector } from 'react-redux';
 import prettier from "prettier/standalone";
 import babylon from "prettier/parser-babel";
-import * as Mui from '@mui/material';
 
 export default function DesignArea(props) {
     let Tree = useSelector(state => state.Tree);

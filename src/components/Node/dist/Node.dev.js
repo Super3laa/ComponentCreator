@@ -73,6 +73,14 @@ Node.prototype.addNode = function (node) {
   this._GridType = 'container';
 };
 
+Node.prototype.editNode = function (obj) {
+  this._name = obj.name;
+  this._selfClosingTag = obj.selfClosingTag;
+  this._content = obj.content;
+  this._MUI = obj.component;
+  this._props = obj.props;
+};
+
 Node.prototype.render = function () {
   var node = deptFirstPreOrder(this, renderElement);
   return node;
@@ -156,7 +164,7 @@ function renderElement(currentNode) {
         className: currentNode._name
       }, currentNode._props, {
         style: currentNode._style
-      }), currentNode.content));
+      }), currentNode._selfClosingTag ? null : currentNode._content));
       currentNode._JSX = getCode(currentNode);
     } else {
       currentNode._JSXComponent = _react["default"].createElement(Mui['Grid'], _objectSpread({
@@ -253,6 +261,5 @@ function JSXMaker(_ref2) {
       tagProps = _ref2.tagProps,
       tagChild = _ref2.tagChild,
       selfClosingTag = _ref2.selfClosingTag;
-  console.log("<".concat(tagName, " ").concat(tagProps, " ").concat(selfClosingTag ? '' : '>', "\n    ").concat(selfClosingTag ? '' : tagChild, "\n").concat(selfClosingTag ? '/>' : "</".concat(tagName, ">"), "\n"));
   return "<".concat(tagName, " ").concat(tagProps, " ").concat(selfClosingTag ? '' : '>', "\n    ").concat(selfClosingTag ? '' : tagChild, "\n").concat(selfClosingTag ? '/>' : "</".concat(tagName, ">"), "\n");
 }

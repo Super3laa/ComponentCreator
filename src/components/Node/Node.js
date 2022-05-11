@@ -38,6 +38,13 @@ Node.prototype.addNode = function (node) {
     this._direction = 'row';
     this._GridType = 'container';
 }
+Node.prototype.editNode = function (obj) {
+    this._name =  obj.name;
+    this._selfClosingTag = obj.selfClosingTag;
+    this._content = obj.content;
+    this._MUI = obj.component;
+    this._props = obj.props;
+}
 Node.prototype.render = function () {
     let node = deptFirstPreOrder(this, renderElement)
     return (node)
@@ -102,9 +109,9 @@ function renderElement(currentNode) {
     try {
         if (currentNode._GridType === 'item') {
             currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
-                React.createElement(Mui[currentNode._MUI], { className: currentNode._name, ...currentNode._props, style: currentNode._style }, currentNode.content));
+                React.createElement(Mui[currentNode._MUI], { className: currentNode._name, ...currentNode._props, style: currentNode._style }, currentNode._selfClosingTag ? null : currentNode._content));
             currentNode._JSX = getCode(currentNode);
-    
+
         } else {
             currentNode._JSXComponent = React.createElement(Mui['Grid'], { item: true, ...currentNode._gridItem },
                 React.createElement(Mui['Grid'], { container: true, className: currentNode._name, ...currentNode._GridStyle, style: currentNode._style }, currentNode._children.map(child => child._JSXComponent)));
@@ -125,7 +132,7 @@ function renderElement(currentNode) {
     } catch (error) {
         console.log(error)
     }
-   
+
 }
 function getCode(currentNode) {
     let style = JSON.stringify(currentNode._style);
@@ -180,10 +187,6 @@ function ObjtoString(obj) {
     return str;
 }
 function JSXMaker({ tagName, tagProps, tagChild, selfClosingTag }) {
-    console.log(`<${tagName} ${tagProps} ${selfClosingTag ? '' : '>'}
-    ${selfClosingTag ? '' : tagChild}
-${selfClosingTag ? '/>' : `</${tagName}>`}
-`)
     return (`<${tagName} ${tagProps} ${selfClosingTag ? '' : '>'}
     ${selfClosingTag ? '' : tagChild}
 ${selfClosingTag ? '/>' : `</${tagName}>`}
